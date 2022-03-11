@@ -7,7 +7,7 @@ with open("requirements.txt", "r") as fh:
 
 setuptools.setup(
     name="waveshapes",
-    version="0.0.1",
+    version="0.1.0",
     author="Tom Vincent",
     author_email="TomVincentCode@gmail.com",
     description="A Python library to generate and manipulate audio.",
