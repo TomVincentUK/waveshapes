@@ -36,7 +36,7 @@ output = ws.outputs.DACStereo(scene=scene)
 amp = ws.basic.Product(scene=scene, outlets=(output.inlets["R"], output.inlets["L"]))
 
 # Create the oscillator to play the sweep
-osc = ws.osc.Sine(scene=scene, outlets=amp.inlets.new())
+osc = ws.oscillators.Sine(scene=scene, outlets=amp.inlets.new())
 
 # Create readers to pass data from arrays to the oscillator and amp node
 osc_freq = ws.inputs.ArrayReader(scene=scene, array=freq, outlets=osc.inlets["freq"])
