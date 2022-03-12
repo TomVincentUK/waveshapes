@@ -33,14 +33,14 @@ scene = ws.Scene(chunk_size=chunk_size, sample_rate=sample_rate)
 
 # Add a stereo output with an amp node connected to both inputs
 output = ws.outputs.DACStereo(scene=scene)
-amp = ws.basic.Product(scene=scene, outlets=(output.inlets["R"], output.inlets["L"]))
+amp = ws.basic.Product(scene=scene, outlets=[output.inlets["R"], output.inlets["L"]])
 
 # Create the oscillator to play the sweep
-osc = ws.oscillators.Sine(scene=scene, outlets=amp.inlets.new())
+osc = ws.oscillators.Sine(scene=scene, outlets=[amp.inlets.new()])
 
 # Create readers to pass data from arrays to the oscillator and amp node
-osc_freq = ws.inputs.ArrayReader(scene=scene, array=freq, outlets=osc.inlets["freq"])
-osc_amp = ws.inputs.ArrayReader(scene=scene, array=amp, outlets=amp.inlets.new())
+osc_freq = ws.inputs.ArrayReader(scene=scene, array=freq, outlets=[osc.inlets["freq"]])
+osc_amp = ws.inputs.ArrayReader(scene=scene, array=amp, outlets=[amp.inlets.new()])
 
 # Run the scene and stop after `duration` seconds
 scene.run(duration=duration)

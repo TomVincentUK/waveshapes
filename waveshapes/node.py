@@ -1,3 +1,6 @@
+import numpy as np
+
+
 class NodeBase:
     """
     Abstract base class for DSP nodes.
@@ -12,6 +15,16 @@ class NodeBase:
         self.scene = scene
         self.scene.add_node(self)
 
+        self._init_outlet_buffer()
+
+        if outlets is None:
+            self.outlets = []
+        else:
+            self.outlets = list(outlets)
+        self._register_outlets()
+
+        self.inlets = None
+
     @property
     def sample_rate(self):
         return self.scene.sample_rate
@@ -19,3 +32,13 @@ class NodeBase:
     @property
     def chunk_size(self):
         return self.scene.chunk_size
+
+    def _init_outlet_buffer(self):
+        self.outlet_buffer = np.zeros(self.chunk_size)
+
+    def _register_outlets(self):
+        """
+        Let outlets know that this node is pointing at them.
+        """
+        for outlet in self.outlets:
+            outlet.set_origin(self)
