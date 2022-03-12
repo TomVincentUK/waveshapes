@@ -14,7 +14,7 @@ Once this script behaves as expected it can be safely deleted, or repurposed as
 an example script for documentation.
 """
 import numpy as np
-from waveshapes import Scene
+import waveshapes as ws
 
 # Input parameters for frequency sweep
 chunk_size = 64  # samples
@@ -29,18 +29,18 @@ t = np.linspace(0, duration, duration * sample_rate, endpoint=False)
 amp = max_volume * np.sin(np.pi * t / duration) ** 2
 
 # Create audio scene
-scene = Scene(chunk_size=chunk_size, sample_rate=sample_rate)
+scene = ws.Scene(chunk_size=chunk_size, sample_rate=sample_rate)
 
 # Add a stereo output with an amp node connected to both inputs
-output = scene.add_dac_stereo()
-amp = scene.add_product(outputs=(output.inputs["R"], output.inputs["L"]))
+output = ws.outputs.DACStereo(scene=scene)
+amp = ws.basic.Product(scene=scene, outlets=(output.inlets["R"], output.inlets["L"]))
 
 # Create the oscillator to play the sweep
-osc = scene.add_sine_osc(outputs=amp.inputs.new())
+osc = ws.osc.Sine(scene=scene, outlets=amp.inlets.new())
 
 # Create readers to pass data from arrays to the oscillator and amp node
-osc_freq = scene.add_samplewise_reader(array=freq, outputs=osc.inputs["freq"])
-osc_amp = scene.add_samplewise_reader(array=amp, outputs=amp.inputs.new())
+osc_freq = ws.inputs.ArrayReader(scene=scene, array=freq, outlets=osc.inlets["freq"])
+osc_amp = ws.inputs.ArrayReader(scene=scene, array=amp, outlets=amp.inlets.new())
 
 # Run the scene and stop after `duration` seconds
 scene.run(duration=duration)
